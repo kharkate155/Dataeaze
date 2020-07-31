@@ -1,0 +1,84 @@
+## Combined Two files
+
+val pq_file = sqlContext.read.parquet("E:\\downloads\\confidential.snappy.parquet")
+val csv_file = sqlContext.read.option("header",false).csv("E:\\downloads\\nonConfidential.csv")
+val concat = pq_file.union(csv_file)
+concat.write.format("csv").option("header",true).mode("overwrite").option("sep",",").save("E://downloads//combined1.csv")
+concat.createOrReplaceTempView("Combined")
+
+sqlContext.sql("describe Combined").show
++--------------------+---------+-------+
+|            col_name|data_type|comment|
++--------------------+---------+-------+
+|                  ID|   string|   null|
+|      Isconfidential|   string|   null|
+|         ProjectName|   string|   null|
+|              Street|   string|   null|
+|                City|   string|   null|
+|               State|   string|   null|
+|             Zipcode|   string|   null|
+|             Country|   string|   null|
+|LEEDSystemVersion...|   string|   null|
+|      PointsAchieved|   string|   null|
+|           CertLevel|   string|   null|
+|            CertDate|   string|   null|
+|         IsCertified|   string|   null|
+|          OwnerTypes|   string|   null|
+|         GrossSqFoot|   string|   null|
+|       TotalPropArea|   string|   null|
+|        ProjectTypes|   string|   null|
+|   OwnerOrganization|   string|   null|
+|    RegistrationDate|   string|   null|
++--------------------+---------+-------+
+
+
+
+
+Question 1.
+commands:
+
+val out1 = sqlContext.sql("select ProjectTypes,LEEDSystemVersionDisplayName,count(*) as Count from Combined where State == 'VA' group by ProjectTypes,LEEDSystemVersionDisplayName")
+val df1 = out1.toDF()
+val out = df1.coalesce(1)
+out.write.format("csv").option("header",true).mode("overwrite").option("sep",",").save("E://downloads//output1.csv")
+
+Question 2.
+commands:
+
+val out1 = sqlContext.sql("select OwnerTypes,count(*) as Count from Combined where State == 'VA' group by OwnerTypes")
+val df1 = out1.toDF()
+val out = df1.coalesce(1)
+out.write.format("csv").option("header",true).mode("overwrite").option("sep",",").save("E://downloads//output2.csv")
+
+Question 3.
+commands:
+
+val out1 = sqlContext.sql("select sum(GrossSqFoot) as Total from Combined where State == 'VA' and IsCertified == 'Yes'")
+val df1 = out1.toDF()
+val out = df1.coalesce(1)
+out.write.format("csv").option("header",true).mode("overwrite").option("sep",",").save("E://downloads//output3.csv")
+	
+Question 4.
+commands:
+
+val s1 = sqlContext.sql("select ProjectName,count(*) as Count from Combined where State == 'VA' group by ProjectName")
+s1.createOrReplaceTempView("Temp1")
+val out1 = sqlContext.sql("select Zipcode from Combined where ProjectName == (select ProjectName from Temp1 where Count == (select max(Count) from Temp1))")
+val df1 = out1.toDF()
+val out = df1.coalesce(1)
+out.write.format("csv").option("header",true).mode("overwrite").option("sep",",").save("E://downloads//output4.csv")
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
