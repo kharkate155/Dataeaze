@@ -1,0 +1,11 @@
+# sql query
+val out1 = sqlContext.sql("select ProjectTypes,LEEDSystemVersionDisplayName,count(*) as Count from Combined where State == 'VA' group by ProjectTypes,LEEDSystemVersionDisplayName")
+
+#convert to dataframe
+val df1 = out1.toDF()
+
+#coalesce for only one partition
+val out = df1.coalesce(1)
+
+#write result to output1.csv
+out.write.format("csv").option("header",true).mode("overwrite").option("sep",",").save("E://downloads//output1.csv")
