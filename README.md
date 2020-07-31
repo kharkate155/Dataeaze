@@ -13,5 +13,5 @@ After installation open spark-shell and run commands in Commands_text.text file.
 
 ## For JAVA Run
 
-Combine file mycsv load into hsqldb by using java code in src in prat folder 
+Combine file mycsv load into hsqldb by using java code in src of prat folder 
 
