@@ -6,6 +6,6 @@ Java jdk version- "1.8.0_211". Link: https://www.oracle.com/webapps/redirect/sig
 
 Spark - https://www.apache.org/dyn/closer.lua/spark/spark-3.0.0/spark-3.0.0-bin-hadoop2.7.tgz
 
-After installation open spark-shell and run commands in output folder.
+After installation open spark-shell and run commands in Commands_text file. 
 
 
